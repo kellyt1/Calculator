@@ -23,7 +23,7 @@ namespace Company.Function
         }
 
         [Function("calculator")]
-        public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
+        public async Task<HttpResponseMessage> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
@@ -37,11 +37,11 @@ namespace Company.Function
             PawtnaResponsItem resData = new PawtnaResponsItem(); // just a sample object
             resData.Person = "pawti person";
  
-            var json = JsonSerializer.Serialize(data);
+            var jsondate = JsonSerializer.Serialize(data);
 
-            Console.WriteLine(json);
-
-            return response;
+            return new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(jsondate, Encoding.UTF8, "application/json")
+            };
             
         }
     }
