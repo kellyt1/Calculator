@@ -35,7 +35,7 @@ namespace Company.Function
             response.Headers.Add("Content-Security-Policy", "defautl-src 'self'; script-src 'self'");
             
             //var jsondate = JsonSerializer.Serialize(resData);
-            var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawntaResponse()); 
+            var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawntaResponse(data)); 
 
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
@@ -45,7 +45,7 @@ namespace Company.Function
             return new FileContentResult(jsondate, "application/json");
         }
 
-        public PawtnaResponsItem createPawntaResponse(){
+        public PawtnaResponsItem createPawntaResponse(PawtnaItem reqData){
             PawtnaResponsItem resData = new PawtnaResponsItem();
 
             var person = new Person();
@@ -53,6 +53,11 @@ namespace Company.Function
             var person2 = new Person();
             person2.Name = "Quality";
             var personList =  new List<Person> {person, person2 };
+
+            var pawtna = new PawtnaItem();
+            pawtna.StartDate = reqData.StartDate;
+
+
             resData.Person = personList;
 
             return resData;
