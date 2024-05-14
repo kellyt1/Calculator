@@ -106,7 +106,7 @@ namespace Company.Function
             var numofPayIns = pawtnaResponsItem.Pawtna.Duration/pawtnaResponsItem.Pawtna.PayInSchedule;
             for (int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++) {
                 var pawtnaPayIn = new PawtnaPayIn();
-                for(int j = 0; i < numofPayIns; i++){
+                for(int j = 0; j < numofPayIns; j++){
                     payInDateList.Add(dateConverter(pawtnaResponsItem.Pawtna.StartDate).AddDays(payInPeriod));
                 }
                 pawtnaPayIn.Pawtna = pawtnaResponsItem.Pawtna;
