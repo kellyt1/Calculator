@@ -105,10 +105,12 @@ namespace Company.Function
             var numofPayIns = pawtnaResponsItem.Pawtna.Duration/pawtnaResponsItem.Pawtna.PayInSchedule;
             var startDate = dateConverter(pawtnaResponsItem.Pawtna.StartDate);
             DateTime nextDate =startDate;
-            for (int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++) {
+            for (int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++) 
+            {
                 var pawtnaPayIn = new PawtnaPayIn();
                 var payInDateList = new List<DateTime>();
-                for(int j = 0; j < numofPayIns; j++){
+                for(int j = 0; j < numofPayIns; j++)
+                {
                      nextDate = j==0 ? startDate : nextDate.AddDays(payInPeriod);
                     payInDateList.Add(nextDate);
                 }
@@ -138,7 +140,8 @@ namespace Company.Function
             var c = (double) b / pawtnaItem.NumOfPeople; 
             var d = (double) pawtnaItem.NumOfPeople * pawtnaItem.PayOutSchedule; 
 
-            if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut)){
+            if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut))
+            {
                 pawtnaItem.Duration = d;
             }
         }
@@ -152,7 +155,8 @@ namespace Company.Function
             var d = (double) pawtnaItem.NumOfPeople * pawtnaItem.PayOutSchedule; 
 
 
-            if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut)){
+            if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut))
+            {
                 pawtnaItem.PayIn = c;
             }
 
@@ -175,6 +179,7 @@ namespace Company.Function
         public int PayOutSchedule { get; set; }
         public double PayIn { get; set; }
         public double Duration { get; set; }
+        public double Bank { get; set; }
     }
 
     public class PawtnaPayIn
@@ -202,4 +207,18 @@ namespace Company.Function
         public string Name { get; set; }
 
     }
+
+    public class Wallet
+    {
+        public Person Person { get; set; }
+        public double Stash { get; set; }
+    }
+
+    public class PayInTransaction 
+    {
+        public DateTime PayInDate { get; set; }
+        public Wallet Wallet { get; set; }
+        public PawtnaResponsItem PawtnaResponsItem { get; set; } 
+    }
+
 }
