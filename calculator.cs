@@ -35,10 +35,13 @@ namespace Company.Function
             response.Headers.Add("Content-Security-Policy", "defautl-src 'self'; script-src 'self'");
             
             PawtnaResponsItem resData = new PawtnaResponsItem(); // just a sample object
-            resData.Person = "pawti person";
+            var person = new Person();
+            person.Name = "tommy";
+            resData.Person = person;
  
             //var jsondate = JsonSerializer.Serialize(resData);
             var jsondate = JsonSerializer.SerializeToUtf8Bytes(resData); 
+
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
             //    Content = new StringContent(jsondate, Encoding.UTF8, "application/json")
@@ -55,6 +58,12 @@ namespace Company.Function
 
     public class PawtnaResponsItem
     {
-        public string Person { get; set; }
+        public Person Person { get; set; }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+
     }
 }
