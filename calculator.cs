@@ -59,6 +59,7 @@ namespace Company.Function
 
 
             resData.Person = personList;
+            resData.Pawtna = pawtna;
 
             return resData;
         }
