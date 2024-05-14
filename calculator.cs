@@ -48,26 +48,34 @@ namespace Company.Function
         public PawtnaResponsItem createPawntaResponse(PawtnaItem reqData){
             PawtnaResponsItem resData = new PawtnaResponsItem();
 
-            var person = new Person();
-            person.Name = "TK";
-            var person2 = new Person();
-            person2.Name = "Quality";
-            var personList =  new List<Person> {person, person2 };
-
             var pawtna = new PawtnaItem();
             pawtna.StartDate = reqData.StartDate;
 
 
-            resData.Person = personList;
+            resData.Person = createPeoplebaseonRequestInput(reqData.NumOfPeople);
             resData.Pawtna = pawtna;
 
             return resData;
+        }
+
+        public List<Person> createPeoplebaseonRequestInput(int numOfPeople)
+        {
+            var personList =  new List<Person>();
+            for (int i = 0; i < numOfPeople; i++) 
+            {
+                var person = new Person();
+                person.Name = "person"+i;
+                personList.Add(person);
+            }
+            
+            return personList;
         }
     }
 
     public class PawtnaItem
     {
         public string StartDate { get; set; }
+        public int NumOfPeople { get; set; }
     }
 
     public class PawtnaResponsItem
