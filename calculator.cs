@@ -51,6 +51,11 @@ namespace Company.Function
             var pawtna = new PawtnaItem();
             pawtna.StartDate = reqData.StartDate;
             pawtna.NumOfPeople = reqData.NumOfPeople;
+            // pawtna.PayIn = reqData.PayIn;
+            pawtna.PayOut = reqData.PayOut;
+            pawtna.PayInSchedule = reqData.PayInSchedule;
+            pawtna.PayOutSchedule = reqData.PayOutSchedule;
+            // pawtna.Duration = reqData.Duration;
 
 
             resData.Person = createPeoplebaseonRequestInput(reqData.NumOfPeople);
@@ -77,6 +82,11 @@ namespace Company.Function
     {
         public string StartDate { get; set; }
         public int NumOfPeople { get; set; }
+        public double PayOut { get; set; }
+        public int PayInSchedule { get; set; }
+        public int PayOutSchedule { get; set; }
+        public double PayIn { get; set; }
+        public double Duration { get; set; }
     }
 
     public class PawtnaResponsItem
