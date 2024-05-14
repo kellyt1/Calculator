@@ -37,7 +37,7 @@ namespace Company.Function
             PawtnaResponsItem resData = new PawtnaResponsItem(); // just a sample object
             resData.Person = "pawti person";
  
-            var jsondate = JsonSerializer.Serialize(data);
+            var jsondate = JsonSerializer.Serialize(resData);
 
             return new HttpResponseMessage(HttpStatusCode.OK) {
                 Content = new StringContent(jsondate, Encoding.UTF8, "application/json")
