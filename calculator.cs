@@ -34,16 +34,8 @@ namespace Company.Function
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
             response.Headers.Add("Content-Security-Policy", "defautl-src 'self'; script-src 'self'");
             
-            PawtnaResponsItem resData = new PawtnaResponsItem(); // just a sample object
-            var person = new Person();
-            person.Name = "TK";
-            var person2 = new Person();
-            person2.Name = "Quality";
-            var personList =  new List<Person> {person, person2 };
-            resData.Person = personList;
- 
             //var jsondate = JsonSerializer.Serialize(resData);
-            var jsondate = JsonSerializer.SerializeToUtf8Bytes(resData); 
+            var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawntaResponse()); 
 
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
@@ -51,6 +43,19 @@ namespace Company.Function
            // };
             
             return new FileContentResult(jsondate, "application/json");
+        }
+
+        public PawtnaResponsItem createPawntaResponse(){
+            PawtnaResponsItem resData = new PawtnaResponsItem();
+
+            var person = new Person();
+            person.Name = "TK";
+            var person2 = new Person();
+            person2.Name = "Quality";
+            var personList =  new List<Person> {person, person2 };
+            resData.Person = personList;
+
+            return resData;
         }
     }
 
@@ -62,6 +67,7 @@ namespace Company.Function
     public class PawtnaResponsItem
     {
         public List<Person> Person { get; set; }
+        public PawtnaItem Pawtna { get; set; }
     }
 
     public class Person
