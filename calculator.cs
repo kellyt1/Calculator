@@ -2,6 +2,7 @@ using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
@@ -58,9 +59,10 @@ namespace Company.Function
             pawtna.PayOutSchedule = reqData.PayOutSchedule;
             // pawtna.Duration = reqData.Duration;
 
-            calculate(pawtna);
-            resData.Person = createPeoplebaseonRequestInput(reqData.NumOfPeople);
+           
+            resData.PersonList = createPeoplebaseonRequestInput(reqData.NumOfPeople);
             resData.Pawtna = pawtna;
+            calculate(resData);
 
             return resData;
         }
@@ -78,7 +80,57 @@ namespace Company.Function
             return personList;
         }
 
-        public void calculate(PawtnaItem pawtnaItem)
+        public void calculate(PawtnaResponsItem pawtnaResponsItem)
+        {
+            calculatePawntaPayIn(pawtnaResponsItem.Pawtna);
+            calculateDuration(pawtnaResponsItem.Pawtna);
+            calculatePawntaDates(pawtnaResponsItem);
+        }
+
+        public void calculatePawntaDates(PawtnaResponsItem pawtnaResponsItem)
+        { 
+            calculatePawtnaPayOutDates(pawtnaResponsItem);
+            calculatePawtnaPayInDates(pawtnaResponsItem);
+        }
+
+        public void calculatePawtnaPayOutDates(PawtnaResponsItem pawtnaResponsItem)
+        {
+
+        }
+
+        public void calculatePawtnaPayInDates(PawtnaResponsItem pawtnaResponsItem)
+        {
+            var payInPeriod = pawtnaResponsItem.Pawtna.PayInSchedule * 7;
+            var pawtnaPayInList = new List<PawtnaPayIn>();
+            var payInDateList = new List<DateTime>();
+            var numofPayIns = pawtnaResponsItem.Pawtna.Duration/pawtnaResponsItem.Pawtna.PayInSchedule;
+            for (int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++) {
+                var pawtnaPayIn = new PawtnaPayIn();
+                for(int j = 0; i < numofPayIns; i++){
+                    payInDateList.Add(new DateTime().AddDays(payInPeriod));
+                }
+                pawtnaPayIn.Pawtna = pawtnaResponsItem.Pawtna;
+                pawtnaPayIn.PayInDateList=payInDateList;
+                pawtnaPayInList.Add(pawtnaPayIn);
+
+            }
+            pawtnaResponsItem.PawtnaPayinList = pawtnaPayInList;
+             
+        }
+
+        public void calculateDuration(PawtnaItem pawtnaItem)
+        {
+            var a = (double) pawtnaItem.PayOut / pawtnaItem.PayOutSchedule; 
+            var b = (double) a * pawtnaItem.PayInSchedule; 
+            var c = (double) b / pawtnaItem.NumOfPeople; 
+            var d = (double) pawtnaItem.NumOfPeople * pawtnaItem.PayOutSchedule; 
+
+            if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut)){
+                pawtnaItem.Duration = d;
+            }
+        }
+
+        public void calculatePawntaPayIn(PawtnaItem pawtnaItem)
         {
 
             var a = (double) pawtnaItem.PayOut / pawtnaItem.PayOutSchedule; 
@@ -88,13 +140,13 @@ namespace Company.Function
 
 
             if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut)){
-                pawtnaItem.Duration = d;
                 pawtnaItem.PayIn = c;
             }
 
         }
 
-        public Boolean validateCalcuator(double a, double b, double c, double d){
+        public Boolean validateCalcuator(double a, double b, double c, double d)
+        {
             var target = (b / c) * a;
             var valid = target == d ? true : false;
             return valid;
@@ -112,10 +164,24 @@ namespace Company.Function
         public double Duration { get; set; }
     }
 
+    public class PawtnaPayIn
+    {
+        public PawtnaItem Pawtna { get; set; }
+        public List<DateTime> PayInDateList { get; set; }
+    }
+
+    public class PawtnaPayOut
+    {
+        public PawtnaItem Pawtna { get; set; }
+        public List<DateTime> PayOutDateList { get; set; }
+    }
+
     public class PawtnaResponsItem
     {
-        public List<Person> Person { get; set; }
+        public List<Person> PersonList { get; set; }
         public PawtnaItem Pawtna { get; set; }
+        public List<PawtnaPayIn> PawtnaPayinList { get; set; }
+        public List<PawtnaPayOut> PawtnaPayOutList { get; set; }
     }
 
     public class Person
