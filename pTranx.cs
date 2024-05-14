@@ -13,6 +13,7 @@ namespace Company.Function
     public class pTranx
     {
         private readonly ILogger<pTranx> _logger;
+        
 
         public pTranx(ILogger<pTranx> logger)
         {
@@ -23,13 +24,16 @@ namespace Company.Function
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
+            var payInTransactionList = new List<PayInTransaction>();
            
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
             response.Headers.Add("Content-Security-Policy", "defautl-src 'self'; script-src 'self'");
             
             //var jsondate = JsonSerializer.Serialize(resData);
-            var jsondate = JsonSerializer.SerializeToUtf8Bytes(payInTransactionsFunction()); 
+            initTransactions(payInTransactionList);
+            payInTransactionAll(payInTransactionList);
+            var jsondate = JsonSerializer.SerializeToUtf8Bytes(payInTransactionList); 
 
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
@@ -39,15 +43,35 @@ namespace Company.Function
             return new FileContentResult(jsondate, "application/json");
         }
 
-        public PayInTransaction payInTransactionsFunction()
+        public void initTransactions(List<PayInTransaction> payInTransactionList)
         {
-            PayInTransaction payInTransaction = new PayInTransaction();
-            if(payInTransaction.PayInDate == DateTime.Now)
+            for(int i=0; i<2; i++)
             {
-                payInTransaction.Wallet.Stash = payInTransaction.Wallet.Stash - payInTransaction.PawtnaResponsItem.Pawtna.PayIn;
-                payInTransaction.PawtnaResponsItem.Pawtna.Bank = payInTransaction.PawtnaResponsItem.Pawtna.Bank  + payInTransaction.PawtnaResponsItem.Pawtna.PayIn;
+                PayInTransaction payInTransaction = new PayInTransaction();
+                payInTransactionList.Add(payInTransaction);
             }
-            return payInTransaction;
+        }
+
+        public void payInTransactionAll(List<PayInTransaction> payInTransactionList)
+        {
+            foreach (PayInTransaction i in payInTransactionList) 
+            {
+                
+                foreach (Person p in i.PawtnaItem.PersonList)
+                {
+                    payInTransactionsFunction(i.PayInDate,p, i.PawtnaItem );
+                }
+                
+            } 
+        }
+
+        public void payInTransactionsFunction(DateTime payInDate, Person person, PawtnaItem pawtna)
+        {
+            if(payInDate == DateTime.Now)
+            {
+                person.Wallet.Stash = person.Wallet.Stash - pawtna.PayIn;
+                pawtna.Bank = pawtna.Bank  + pawtna.PayIn;
+            }
         }
 
     }
