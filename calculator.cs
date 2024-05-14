@@ -50,6 +50,7 @@ namespace Company.Function
 
             var pawtna = new PawtnaItem();
             pawtna.StartDate = reqData.StartDate;
+            pawtna.NumOfPeople = reqData.NumOfPeople;
 
 
             resData.Person = createPeoplebaseonRequestInput(reqData.NumOfPeople);
