@@ -110,7 +110,7 @@ namespace Company.Function
                 var payInDateList = new List<DateTime>();
                 for(int j = 0; j < numofPayIns; j++){
                      nextDate = j==0 ? startDate : nextDate.AddDays(payInPeriod);
-                    payInDateList.Add(nextDate.AddDays(7));
+                    payInDateList.Add(nextDate);
                 }
                 
                 pawtnaPayIn.Pawtna = pawtnaResponsItem.Pawtna;
