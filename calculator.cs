@@ -107,7 +107,7 @@ namespace Company.Function
             for (int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++) {
                 var pawtnaPayIn = new PawtnaPayIn();
                 for(int j = 0; i < numofPayIns; i++){
-                    payInDateList.Add(DateTime.Now.AddDays(payInPeriod));
+                    payInDateList.Add(dateConverter(pawtnaResponsItem.Pawtna.StartDate).AddDays(payInPeriod));
                 }
                 pawtnaPayIn.Pawtna = pawtnaResponsItem.Pawtna;
                 pawtnaPayIn.PayInDateList=payInDateList;
@@ -116,6 +116,15 @@ namespace Company.Function
             }
             pawtnaResponsItem.PawtnaPayinList = pawtnaPayInList;
              
+        }
+
+        public DateTime dateConverter(string date)
+        {
+            var str = "5/12/2020";
+            DateTime dt;
+            var isValidDate = DateTime.TryParse(date, out dt);
+            return dt;
+            
         }
 
         public void calculateDuration(PawtnaItem pawtnaItem)
