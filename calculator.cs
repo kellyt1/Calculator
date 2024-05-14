@@ -58,7 +58,7 @@ namespace Company.Function
             pawtna.PayOutSchedule = reqData.PayOutSchedule;
             // pawtna.Duration = reqData.Duration;
 
-
+            calculate(pawtna);
             resData.Person = createPeoplebaseonRequestInput(reqData.NumOfPeople);
             resData.Pawtna = pawtna;
 
