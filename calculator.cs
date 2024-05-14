@@ -103,11 +103,13 @@ namespace Company.Function
             var payInPeriod = pawtnaResponsItem.Pawtna.PayInSchedule * 7;
             var pawtnaPayInList = new List<PawtnaPayIn>();
             var numofPayIns = pawtnaResponsItem.Pawtna.Duration/pawtnaResponsItem.Pawtna.PayInSchedule;
+            var startDate = dateConverter(pawtnaResponsItem.Pawtna.StartDate);
             for (int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++) {
                 var pawtnaPayIn = new PawtnaPayIn();
                 var payInDateList = new List<DateTime>();
                 for(int j = 0; j < numofPayIns; j++){
-                    payInDateList.Add(dateConverter(pawtnaResponsItem.Pawtna.StartDate).AddDays(payInPeriod));
+                    var nextDate = j==0 ? startDate : startDate.AddDays(payInPeriod);
+                    payInDateList.Add(nextDate);
                 }
                 
                 pawtnaPayIn.Pawtna = pawtnaResponsItem.Pawtna;
