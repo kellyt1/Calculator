@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Data.Common;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -75,6 +76,28 @@ namespace Company.Function
             }
             
             return personList;
+        }
+
+        public void calculate(PawtnaItem pawtnaItem)
+        {
+
+            var a = (double) pawtnaItem.PayOut / pawtnaItem.PayOutSchedule; 
+            var b = (double) a * pawtnaItem.PayInSchedule; 
+            var c = (double) b / pawtnaItem.NumOfPeople; 
+            var d = (double) pawtnaItem.NumOfPeople * pawtnaItem.PayOutSchedule; 
+
+
+            if(validateCalcuator(c,d,pawtnaItem.PayInSchedule, pawtnaItem.PayOut)){
+                pawtnaItem.Duration = d;
+                pawtnaItem.PayIn = c;
+            }
+
+        }
+
+        public Boolean validateCalcuator(double a, double b, double c, double d){
+            var target = (b / c) * a;
+            var valid = target == d ? true : false;
+            return valid;
         }
     }
 
