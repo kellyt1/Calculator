@@ -36,8 +36,11 @@ namespace Company.Function
             
             PawtnaResponsItem resData = new PawtnaResponsItem(); // just a sample object
             var person = new Person();
-            person.Name = "tommy";
-            resData.Person = person;
+            person.Name = "TK";
+            var person2 = new Person();
+            person2.Name = "Quality";
+            var personList =  new List<Person> {person, person2 };
+            resData.Person = personList;
  
             //var jsondate = JsonSerializer.Serialize(resData);
             var jsondate = JsonSerializer.SerializeToUtf8Bytes(resData); 
@@ -58,7 +61,7 @@ namespace Company.Function
 
     public class PawtnaResponsItem
     {
-        public Person Person { get; set; }
+        public List<Person> Person { get; set; }
     }
 
     public class Person
