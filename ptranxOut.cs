@@ -46,9 +46,9 @@ namespace Company.Function
             {
                 PayInTransaction payInTransaction = new PayInTransaction();
                 PawtnaItem pawtnaItem = new PawtnaItem();
-                pawtnaItem.Bank  = 0 ;
+                pawtnaItem.Bank  = 500 ;
                 pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
-                pawtnaItem.PayIn = 50;
+                pawtnaItem.PayOut = 500;
 
                 payInTransaction.PawtnaItem = pawtnaItem;
                 payInTransactionList.Add(payInTransaction);
@@ -89,8 +89,8 @@ namespace Company.Function
         {
             if(payInDate.Date == DateTime.Now.Date)
             {
-                person.Wallet.Stash = person.Wallet.Stash - pawtna.PayIn;
-                pawtna.Bank = pawtna.Bank  + pawtna.PayIn;
+                person.Wallet.Stash = person.Wallet.Stash + pawtna.PayOut;
+                pawtna.Bank = pawtna.Bank  - pawtna.PayOut;
             }
         }
     }
