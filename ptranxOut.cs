@@ -46,11 +46,16 @@ namespace Company.Function
             {
                 PayOutTransaction payOutTransaction = new PayOutTransaction();
                 PawtnaItem pawtnaItem = new PawtnaItem();
+                PawtnaPayOut pawtnaPayOut = new PawtnaPayOut();
+
                 pawtnaItem.Bank  = 500 ;
-                pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
+                //pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
                 pawtnaItem.PayOut = 500;
 
-                payOutTransaction.PawtnaItem = pawtnaItem;
+                pawtnaPayOut.Pawtna = pawtnaItem;
+                pawtnaPayOut.PersonPayOut = createPeoplebaseonRequestInput(2);
+
+                payOutTransaction.PawtnaPayOut = pawtnaPayOut;
                 payOutTransactionList.Add(payOutTransaction);
                 payOutTransaction.PayOutDate = DateTime.Now;
             }
@@ -77,9 +82,9 @@ namespace Company.Function
             foreach (PayOutTransaction i in payOutTransactionList) 
             {
                 
-                foreach (Person p in i.PawtnaItem.PersonList)
+                foreach (Person p in i.PawtnaPayOut.PersonPayOut)
                 {
-                    payOutTransactionsFunction(i.PayOutDate,p, i.PawtnaItem );
+                    payOutTransactionsFunction(i.PayOutDate,p, i.PawtnaPayOut.Pawtna );
                 }
                 
             } 
