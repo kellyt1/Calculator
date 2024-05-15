@@ -57,6 +57,7 @@ namespace Company.Function
 
                 payInTransaction.PawtnaItem = pawtnaItem;
                 payInTransactionList.Add(payInTransaction);
+                payInTransaction.PayInDate = DateTime.Now;
             }
         }
 
