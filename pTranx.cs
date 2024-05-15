@@ -51,7 +51,7 @@ namespace Company.Function
             {
                 PayInTransaction payInTransaction = new PayInTransaction();
                 PawtnaItem pawtnaItem = new PawtnaItem();
-                pawtnaItem.Bank  = 5000 ;
+                pawtnaItem.Bank  = 0 ;
                 pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
                 pawtnaItem.PayIn = 50;
 
@@ -67,6 +67,9 @@ namespace Company.Function
             {
                 var person = new Person();
                 person.Name = "person"+i;
+                Wallet wallet = new Wallet();
+                wallet.Stash = 5000;
+                person.Wallet = wallet;
                 personList.Add(person);
             }
             
