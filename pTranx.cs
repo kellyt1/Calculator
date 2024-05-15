@@ -92,7 +92,7 @@ namespace Company.Function
 
         public void payInTransactionsFunction(DateTime payInDate, Person person, PawtnaItem pawtna)
         {
-            if(payInDate == DateTime.Now)
+            if(payInDate.Date == DateTime.Now.Date)
             {
                 person.Wallet.Stash = person.Wallet.Stash - pawtna.PayIn;
                 pawtna.Bank = pawtna.Bank  + pawtna.PayIn;
