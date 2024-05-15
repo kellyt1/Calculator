@@ -25,7 +25,7 @@ namespace Company.Function
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             var payOutTransactionList = new List<PayOutTransaction>();
 
-                        var response = req.CreateResponse(HttpStatusCode.OK);
+            var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
             response.Headers.Add("Content-Security-Policy", "defautl-src 'self'; script-src 'self'");
             
@@ -48,12 +48,12 @@ namespace Company.Function
                 PawtnaItem pawtnaItem = new PawtnaItem();
                 PawtnaPayOut pawtnaPayOut = new PawtnaPayOut();
 
-                pawtnaItem.Bank  = 500 ;
+                pawtnaItem.Bank.Value  = 500 ;
                 //pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
                 pawtnaItem.PayOut = 500;
 
                 pawtnaPayOut.Pawtna = pawtnaItem;
-                pawtnaPayOut.PersonPayOut = createPeoplebaseonRequestInput(2);
+                pawtnaPayOut.PersonPayOutList = createPeoplebaseonRequestInput(2);
 
                 payOutTransaction.PawtnaPayOut = pawtnaPayOut;
                 payOutTransactionList.Add(payOutTransaction);
@@ -82,10 +82,10 @@ namespace Company.Function
             foreach (PayOutTransaction i in payOutTransactionList) 
             {
                 
-                foreach (Person p in i.PawtnaPayOut.PersonPayOut)
-                {
-                    payOutTransactionsFunction(i.PayOutDate,p, i.PawtnaPayOut.Pawtna );
-                }
+                // foreach (Person p in i.PawtnaPayOut.PersonPayOutList)
+                // {
+                //     payOutTransactionsFunction(i.PayOutDate,p, i.PawtnaPayOut.Pawtna );
+                // }
                 
             } 
         }
@@ -95,7 +95,7 @@ namespace Company.Function
             if(payOutDate.Date == DateTime.Now.Date)
             {
                 person.Wallet.Stash = person.Wallet.Stash + pawtna.PayOut;
-                pawtna.Bank = pawtna.Bank  - pawtna.PayOut;
+                pawtna.Bank.Value = pawtna.Bank.Value  - pawtna.PayOut;
             }
         }
     }

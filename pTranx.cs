@@ -41,7 +41,7 @@ namespace Company.Function
             //return new HttpResponseMessage(HttpStatusCode.OK) {
             //    Content = new StringContent(jsondate, Encoding.UTF8, "application/json")
            // };
-            
+
             return new FileContentResult(jsondate, "application/json");
         }
 
@@ -53,14 +53,14 @@ namespace Company.Function
                 PawtnaPayIn pawtnaPayIn = new PawtnaPayIn();
                 
                 PawtnaItem pawtnaItem = new PawtnaItem();
-                pawtnaItem.Bank  = 0 ;
+                pawtnaItem.Bank.Value  = 0 ;
                 pawtnaItem.PayIn = 50;
                 pawtnaItem.NumOfPeople = 2;
 
                 pawtnaPayIn.Pawtna = pawtnaItem;
-                pawtnaPayIn.PersonPayIn = createPeoplebaseonRequestInput(pawtnaItem.NumOfPeople);
+                //pawtnaPayIn.PersonPayInList = createPeoplebaseonRequestInput(pawtnaItem.NumOfPeople);
 
-                payInTransaction.PawtnaPayIn = pawtnaPayIn;
+                //payInTransaction.PawtnaPayIn = pawtnaPayIn;
                 payInTransactionList.Add(payInTransaction);
                 payInTransaction.PayInDate = DateTime.Now;
             }
@@ -87,10 +87,10 @@ namespace Company.Function
             foreach (PayInTransaction i in payInTransactionList) 
             {
                 
-                foreach (Person p in i.PawtnaPayIn.PersonPayIn)
-                {
-                    payInTransactionsFunction(i.PayInDate,p, i.PawtnaPayIn.Pawtna );
-                }
+                // foreach (Person p in i.PawtnaPayIn.PersonPayInList)
+                // {
+                //     payInTransactionsFunction(i.PayInDate,p, i.PawtnaPayIn.Pawtna );
+                // }
                 
             } 
         }
@@ -100,7 +100,7 @@ namespace Company.Function
             if(payInDate.Date == DateTime.Now.Date)
             {
                 person.Wallet.Stash = person.Wallet.Stash - pawtna.PayIn;
-                pawtna.Bank = pawtna.Bank  + pawtna.PayIn;
+                pawtna.Bank.Value = pawtna.Bank.Value  + pawtna.PayIn;
             }
         }
 

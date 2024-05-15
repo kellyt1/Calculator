@@ -8,6 +8,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -37,20 +38,46 @@ namespace Company.Function
             response.Headers.Add("Content-Security-Policy", "defautl-src 'self'; script-src 'self'");
             
             //var jsondate = JsonSerializer.Serialize(resData);
-            var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawntaResponse(data)); 
+            PawtnaResponsItem pawtnaResponsItem = createPawntaResponse(data);
 
+        var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawtnaTrnxRespons(pawtnaResponsItem)); 
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
             //    Content = new StringContent(jsondate, Encoding.UTF8, "application/json")
            // };
+
+            
             
             return new FileContentResult(jsondate, "application/json");
         }
 
+        public PawtnaTrnxResponsItem createPawtnaTrnxRespons(PawtnaResponsItem pawtnaResponsItem )
+        {
+            PawtnaTrnxResponsItem pawtnaTrnxResponsItem = new PawtnaTrnxResponsItem();
+            PawtnaPayIn payin = pawtnaResponsItem.PawtnaPayinList.First();
+            payin.PersonPayInList = pawtnaResponsItem.PersonList;
+            var payInTrnxList = new List<PayInTransaction>();
+            foreach(DateTime pin in payin.PayInDateList)
+            {
+                foreach( Person person in payin.PersonPayInList)
+                {
+                    PayInTransaction payInTransaction = new PayInTransaction();
+                    PersonPayIn personPayIn = new PersonPayIn();
+                    personPayIn.Pawtna = pawtnaResponsItem.Pawtna;
+                    personPayIn.Person = person;
+                    payInTransaction.PersonPayIn = personPayIn;
+                    payInTransaction.PayInDate = pin;
+                    payInTrnxList.Add(payInTransaction);
+                }
+            }
+            pawtnaTrnxResponsItem.payInTransactionList = payInTrnxList;
+            return pawtnaTrnxResponsItem;
+        }
         public PawtnaResponsItem createPawntaResponse(PawtnaItem reqData){
             PawtnaResponsItem resData = new PawtnaResponsItem();
 
             var pawtna = new PawtnaItem();
+            pawtna.Name = reqData.Name;
             pawtna.StartDate = reqData.StartDate;
             pawtna.NumOfPeople = reqData.NumOfPeople;
             // pawtna.PayIn = reqData.PayIn;
@@ -74,6 +101,7 @@ namespace Company.Function
             {
                 var person = new Person();
                 person.Name = "person"+i;
+                person.Wallet = new Wallet(){Stash=200};
                 personList.Add(person);
             }
             
@@ -179,21 +207,38 @@ namespace Company.Function
         public int PayOutSchedule { get; set; }
         public double PayIn { get; set; }
         public double Duration { get; set; }
-        public double Bank { get; set; }
+        public string Name { get; set; }
+        public Bank Bank { get; set; }
+        //public List<PayInTransaction> payInTransactions { get; set; }
+        //public List<PayOutTransaction> payOutTransactions { get; set; }
     }
 
     public class PawtnaPayIn
     {
         public PawtnaItem Pawtna { get; set; }
         public List<DateTime> PayInDateList { get; set; }
-        public List<Person> PersonPayIn { get; set; }
+        public List<Person> PersonPayInList { get; set; }
+    }
+
+    public class PersonPayIn
+    {
+        public PawtnaItem Pawtna { get; set; }
+        //public List<DateTime> PayInDateList { get; set; }
+        public Person Person { get; set; }
     }
 
     public class PawtnaPayOut
     {
         public PawtnaItem Pawtna { get; set; }
         public List<DateTime> PayOutDateList { get; set; }
-        public List<Person> PersonPayOut { get; set; }
+        public List<Person> PersonPayOutList { get; set; }
+    }
+
+    public class PersonPayOut
+    {
+        public PawtnaItem Pawtna { get; set; }
+        public List<DateTime> PayOutDateList { get; set; }
+        public Person Person { get; set; }
     }
 
     public class PawtnaResponsItem
@@ -204,6 +249,11 @@ namespace Company.Function
         public List<PawtnaPayOut> PawtnaPayOutList { get; set; }
     }
 
+    public class PawtnaTrnxResponsItem
+    {
+        public List<PayInTransaction> payInTransactionList { get; set; }
+    }
+
     public class Person
     {
         public string Name { get; set; }
@@ -212,14 +262,17 @@ namespace Company.Function
 
     public class Wallet
     {
-        public Person Person { get; set; }
         public double Stash { get; set; }
+        public List<IndBank> IndBankList { get; set; }
+        public List<IndCard> IndCards { get; set; }
     }
+
 
     public class PayInTransaction 
     {
         public DateTime PayInDate { get; set; }
-       public PawtnaPayIn PawtnaPayIn { get; set; }
+       //public PawtnaPayIn PawtnaPayIn { get; set; }
+       public PersonPayIn PersonPayIn { get; set; }
     }
 
         public class PayOutTransaction 
@@ -233,9 +286,25 @@ namespace Company.Function
         public List<PayInTransaction> PayInTransactions { get; set;}
     }
 
-        public class PayOutTransactionResponse
+    public class PayOutTransactionResponse
     {
         public List<PayOutTransaction> PayOutTransactions { get; set;}
     }
 
+    public class Bank
+    {
+        public string Name { get; set; }
+        public double Value { get; set; }
+        public string BankAcct { get; set; }
+    }
+
+    public class IndBank
+    {
+        public string IndBankAccountNumber { get; set; }
+    }
+
+    public class IndCard
+    {
+        public string IndCardNumber { get; set; }
+    }
 }
