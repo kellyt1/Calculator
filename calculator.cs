@@ -221,4 +221,9 @@ namespace Company.Function
        public PawtnaItem PawtnaItem { get; set; }
     }
 
+    public class PayInTransactionResponse
+    {
+        public List<PayInTransaction> PayInTransactions { get; set;}
+    }
+
 }

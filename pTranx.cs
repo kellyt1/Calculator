@@ -33,7 +33,9 @@ namespace Company.Function
             //var jsondate = JsonSerializer.Serialize(resData);
             initTransactions(payInTransactionList);
             payInTransactionAll(payInTransactionList);
-            var jsondate = JsonSerializer.SerializeToUtf8Bytes(payInTransactionList); 
+            PayInTransactionResponse payInTransactionResponse = new PayInTransactionResponse();
+            payInTransactionResponse.PayInTransactions = payInTransactionList;
+            var jsondate = JsonSerializer.SerializeToUtf8Bytes(payInTransactionResponse); 
 
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
