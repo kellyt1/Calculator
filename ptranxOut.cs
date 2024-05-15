@@ -23,7 +23,7 @@ namespace Company.Function
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            var payOutTransactionList = new List<PayInTransaction>();
+            var payOutTransactionList = new List<PayOutTransaction>();
 
                         var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
@@ -32,27 +32,27 @@ namespace Company.Function
             //var jsondate = JsonSerializer.Serialize(resData);
             initTransactions(payOutTransactionList);
             payOutTransactionAll(payOutTransactionList);
-            PayInTransactionResponse payInTransactionResponse = new PayInTransactionResponse();
-            payInTransactionResponse.PayInTransactions = payOutTransactionList;
-            var jsondate = JsonSerializer.SerializeToUtf8Bytes(payInTransactionResponse); 
+            PayOutTransactionResponse payOutTransactionResponse = new PayOutTransactionResponse();
+            payOutTransactionResponse.PayOutTransactions = payOutTransactionList;
+            var jsondate = JsonSerializer.SerializeToUtf8Bytes(payOutTransactionResponse); 
 
             return new FileContentResult(jsondate, "application/json");
 
         }
 
-                public void initTransactions(List<PayInTransaction> payInTransactionList)
+                public void initTransactions(List<PayOutTransaction> payOutTransactionList)
         {
             for(int i=0; i<2; i++)
             {
-                PayInTransaction payInTransaction = new PayInTransaction();
+                PayOutTransaction payOutTransaction = new PayOutTransaction();
                 PawtnaItem pawtnaItem = new PawtnaItem();
                 pawtnaItem.Bank  = 500 ;
                 pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
                 pawtnaItem.PayOut = 500;
 
-                payInTransaction.PawtnaItem = pawtnaItem;
-                payInTransactionList.Add(payInTransaction);
-                payInTransaction.PayInDate = DateTime.Now;
+                payOutTransaction.PawtnaItem = pawtnaItem;
+                payOutTransactionList.Add(payOutTransaction);
+                payOutTransaction.PayOutDate = DateTime.Now;
             }
         }
 
@@ -72,22 +72,22 @@ namespace Company.Function
             return personList;
         }
 
-        public void payOutTransactionAll(List<PayInTransaction> payInTransactionList)
+        public void payOutTransactionAll(List<PayOutTransaction> payOutTransactionList)
         {
-            foreach (PayInTransaction i in payInTransactionList) 
+            foreach (PayOutTransaction i in payOutTransactionList) 
             {
                 
                 foreach (Person p in i.PawtnaItem.PersonList)
                 {
-                    payOutTransactionsFunction(i.PayInDate,p, i.PawtnaItem );
+                    payOutTransactionsFunction(i.PayOutDate,p, i.PawtnaItem );
                 }
                 
             } 
         }
 
-        public void payOutTransactionsFunction(DateTime payInDate, Person person, PawtnaItem pawtna)
+        public void payOutTransactionsFunction(DateTime payOutDate, Person person, PawtnaItem pawtna)
         {
-            if(payInDate.Date == DateTime.Now.Date)
+            if(payOutDate.Date == DateTime.Now.Date)
             {
                 person.Wallet.Stash = person.Wallet.Stash + pawtna.PayOut;
                 pawtna.Bank = pawtna.Bank  - pawtna.PayOut;

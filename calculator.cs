@@ -221,9 +221,20 @@ namespace Company.Function
        public PawtnaItem PawtnaItem { get; set; }
     }
 
+        public class PayOutTransaction 
+    {
+        public DateTime PayOutDate { get; set; }
+       public PawtnaItem PawtnaItem { get; set; }
+    }
+
     public class PayInTransactionResponse
     {
         public List<PayInTransaction> PayInTransactions { get; set;}
+    }
+
+        public class PayOutTransactionResponse
+    {
+        public List<PayOutTransaction> PayOutTransactions { get; set;}
     }
 
 }
