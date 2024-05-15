@@ -50,8 +50,27 @@ namespace Company.Function
             for(int i=0; i<2; i++)
             {
                 PayInTransaction payInTransaction = new PayInTransaction();
+                PawtnaItem pawtnaItem = new PawtnaItem();
+                pawtnaItem.Bank  = 5000 ;
+                pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
+                pawtnaItem.PayIn = 50;
+
+                payInTransaction.PawtnaItem = pawtnaItem;
                 payInTransactionList.Add(payInTransaction);
             }
+        }
+
+        public List<Person> createPeoplebaseonRequestInput(int numOfPeople)
+        {
+            var personList =  new List<Person>();
+            for (int i = 0; i < numOfPeople; i++) 
+            {
+                var person = new Person();
+                person.Name = "person"+i;
+                personList.Add(person);
+            }
+            
+            return personList;
         }
 
         public void payInTransactionAll(List<PayInTransaction> payInTransactionList)
