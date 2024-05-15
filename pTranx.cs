@@ -50,12 +50,17 @@ namespace Company.Function
             for(int i=0; i<2; i++)
             {
                 PayInTransaction payInTransaction = new PayInTransaction();
+                PawtnaPayIn pawtnaPayIn = new PawtnaPayIn();
+                
                 PawtnaItem pawtnaItem = new PawtnaItem();
                 pawtnaItem.Bank  = 0 ;
-                pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
                 pawtnaItem.PayIn = 50;
+                pawtnaItem.NumOfPeople = 2;
 
-                payInTransaction.PawtnaItem = pawtnaItem;
+                pawtnaPayIn.Pawtna = pawtnaItem;
+                pawtnaPayIn.PersonPayIn = createPeoplebaseonRequestInput(pawtnaItem.NumOfPeople);
+
+                payInTransaction.PawtnaPayIn = pawtnaPayIn;
                 payInTransactionList.Add(payInTransaction);
                 payInTransaction.PayInDate = DateTime.Now;
             }
@@ -82,9 +87,9 @@ namespace Company.Function
             foreach (PayInTransaction i in payInTransactionList) 
             {
                 
-                foreach (Person p in i.PawtnaItem.PersonList)
+                foreach (Person p in i.PawtnaPayIn.PersonPayIn)
                 {
-                    payInTransactionsFunction(i.PayInDate,p, i.PawtnaItem );
+                    payInTransactionsFunction(i.PayInDate,p, i.PawtnaPayIn.Pawtna );
                 }
                 
             } 

@@ -180,19 +180,20 @@ namespace Company.Function
         public double PayIn { get; set; }
         public double Duration { get; set; }
         public double Bank { get; set; }
-        public List<Person> PersonList { get; set; }
     }
 
     public class PawtnaPayIn
     {
         public PawtnaItem Pawtna { get; set; }
         public List<DateTime> PayInDateList { get; set; }
+        public List<Person> PersonPayIn { get; set; }
     }
 
     public class PawtnaPayOut
     {
         public PawtnaItem Pawtna { get; set; }
         public List<DateTime> PayOutDateList { get; set; }
+        public List<Person> PersonPayOut { get; set; }
     }
 
     public class PawtnaResponsItem
@@ -218,13 +219,13 @@ namespace Company.Function
     public class PayInTransaction 
     {
         public DateTime PayInDate { get; set; }
-       public PawtnaItem PawtnaItem { get; set; }
+       public PawtnaPayIn PawtnaPayIn { get; set; }
     }
 
         public class PayOutTransaction 
     {
         public DateTime PayOutDate { get; set; }
-       public PawtnaItem PawtnaItem { get; set; }
+       public PawtnaPayOut PawtnaPayOut { get; set; }
     }
 
     public class PayInTransactionResponse

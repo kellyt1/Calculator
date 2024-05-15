@@ -40,7 +40,7 @@ namespace Company.Function
 
         }
 
-                public void initTransactions(List<PayOutTransaction> payOutTransactionList)
+        public void initTransactions(List<PayOutTransaction> payOutTransactionList)
         {
             for(int i=0; i<2; i++)
             {
