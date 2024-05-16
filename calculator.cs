@@ -40,7 +40,7 @@ namespace Company.Function
             //var jsondate = JsonSerializer.Serialize(resData);
             PawtnaResponsItem pawtnaResponsItem = createPawntaResponse(data);
 
-        var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawtnaTrnxRespons(pawtnaResponsItem)); 
+            var jsondate = JsonSerializer.SerializeToUtf8Bytes(createPawtnaTrnxRespons(pawtnaResponsItem)); 
 
             //return new HttpResponseMessage(HttpStatusCode.OK) {
             //    Content = new StringContent(jsondate, Encoding.UTF8, "application/json")
@@ -55,7 +55,7 @@ namespace Company.Function
         {
             PawtnaTrnxResponsItem pawtnaTrnxResponsItem = new PawtnaTrnxResponsItem();
             PawtnaPayIn payin = pawtnaResponsItem.PawtnaPayinList.First();
-            payin.PersonPayInList = pawtnaResponsItem.PersonList;
+            payin.PersonPayInList = pawtnaResponsItem.Pawtna.PersonList;
             var payInTrnxList = new List<PayInTransaction>();
             foreach(DateTime pin in payin.PayInDateList)
             {
@@ -84,29 +84,45 @@ namespace Company.Function
             pawtna.PayOut = reqData.PayOut;
             pawtna.PayInSchedule = reqData.PayInSchedule;
             pawtna.PayOutSchedule = reqData.PayOutSchedule;
+            pawtna.PersonList = reqData.PersonList;
+            pawtna.Bank = new Bank()
+            { 
+                BankAcct = "9999948995005qa",
+                Name = "test External acct",
+                Value = 0
+            };
             // pawtna.Duration = reqData.Duration;
 
            
-            resData.PersonList = createPeoplebaseonRequestInput(reqData.NumOfPeople);
+           // resData.PersonList = createPeoplebaseonRequestInput(reqData.NumOfPeople);
+            //resData.PersonList = reqData.PersonList;
             resData.Pawtna = pawtna;
             calculate(resData);
 
             return resData;
         }
 
-        public List<Person> createPeoplebaseonRequestInput(int numOfPeople)
-        {
-            var personList =  new List<Person>();
-            for (int i = 0; i < numOfPeople; i++) 
-            {
-                var person = new Person();
-                person.Name = "person"+i;
-                person.Wallet = new Wallet(){Stash=200};
-                personList.Add(person);
-            }
+        // public List<Person> createPeoplebaseonRequestInput(int numOfPeople)
+        // {
+        //     var personList =  new List<Person>();
+        //     for (int i = 0; i < numOfPeople; i++) 
+        //     {
+        //         var person = new Person();
+        //         person.Name = "person"+i;
+        //         person.Wallet = new Wallet()
+        //         {
+        //             Stash=200,
+        //             DefaultIndBankAcct = new IndBank(){IndBankAccountNumber="39399949499494"},
+        //             DefaultIndCard = new IndCard(){IndCardNumber="99999999999999"},
+        //             IndBankList = new List<IndBank>(),
+        //             IndCardList = new List<IndCard>()
+
+        //         };
+        //         personList.Add(person);
+        //     }
             
-            return personList;
-        }
+        //     return personList;
+        // }
 
         public void calculate(PawtnaResponsItem pawtnaResponsItem)
         {
@@ -209,6 +225,7 @@ namespace Company.Function
         public double Duration { get; set; }
         public string Name { get; set; }
         public Bank Bank { get; set; }
+        public List<Person> PersonList { get; set; }
         //public List<PayInTransaction> payInTransactions { get; set; }
         //public List<PayOutTransaction> payOutTransactions { get; set; }
     }
@@ -263,8 +280,10 @@ namespace Company.Function
     public class Wallet
     {
         public double Stash { get; set; }
+        public IndCard DefaultIndCard { get; set; }
+        public IndBank DefaultIndBankAcct { get; set; }
         public List<IndBank> IndBankList { get; set; }
-        public List<IndCard> IndCards { get; set; }
+        public List<IndCard> IndCardList { get; set; }
     }
 
 
