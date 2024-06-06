@@ -55,7 +55,10 @@ namespace Company.Function
         {
             PawtnaTrnxResponsItem pawtnaTrnxResponsItem = new PawtnaTrnxResponsItem();
             PawtnaPayIn payin = pawtnaResponsItem.PawtnaPayinList.First();
+            PawtnaPayOut payOut = pawtnaResponsItem.PawtnaPayOutList.First();
+            payOut.PersonPayOutList = pawtnaResponsItem.Pawtna.PersonList;
             payin.PersonPayInList = pawtnaResponsItem.Pawtna.PersonList;
+            var payOutTrnxList = new List<PayOutTransaction>();
             var payInTrnxList = new List<PayInTransaction>();
             foreach(DateTime pin in payin.PayInDateList)
             {
@@ -68,9 +71,27 @@ namespace Company.Function
                     payInTransaction.PersonPayIn = personPayIn;
                     payInTransaction.PayInDate = pin;
                     payInTrnxList.Add(payInTransaction);
+
                 }
+
+                
             }
+
+            for(int i =0; i< payOut.PersonPayOutList.Count; i++)
+            {
+                PayOutTransaction payOutTransaction = new PayOutTransaction();
+                PersonPayOut personPayOut = new PersonPayOut();
+                personPayOut.Pawtna = pawtnaResponsItem.Pawtna;
+                personPayOut.Person = payOut.PersonPayOutList[i];
+                payOutTransaction.PersonPayOut = personPayOut;
+                payOutTransaction.PayOutDate = payOut.PayOutDateList[i];
+                payOutTrnxList.Add(payOutTransaction);
+            }
+
+
+
             pawtnaTrnxResponsItem.payInTransactionList = payInTrnxList;
+            pawtnaTrnxResponsItem.payOutTransactionList = payOutTrnxList;
             return pawtnaTrnxResponsItem;
         }
         public PawtnaResponsItem createPawntaResponse(PawtnaItem reqData){
@@ -139,7 +160,28 @@ namespace Company.Function
 
         public void calculatePawtnaPayOutDates(PawtnaResponsItem pawtnaResponsItem)
         {
+            var lengthOfPawtna = pawtnaResponsItem.Pawtna.Duration;
+            var numOfPeople = pawtnaResponsItem.Pawtna.NumOfPeople;
+            var payOutValue = lengthOfPawtna/numOfPeople;
+            var payOutPeriod = payOutValue;
+           
+            var pawtnaPayOutList = new List<PawtnaPayOut>();
 
+           
+            var startDate = dateConverter(pawtnaResponsItem.Pawtna.StartDate);
+            DateTime nextDate =startDate;
+            var payOutDateList = new List<DateTime>();
+            var pawtnaPayOut = new PawtnaPayOut();
+            for(int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++)
+            {
+                nextDate = nextDate.AddDays(payOutPeriod);
+                payOutDateList.Add(nextDate);
+            
+                pawtnaPayOut.Pawtna = pawtnaResponsItem.Pawtna;
+                pawtnaPayOut.PayOutDateList=payOutDateList;
+                pawtnaPayOutList.Add(pawtnaPayOut);
+            }
+            pawtnaResponsItem.PawtnaPayOutList = pawtnaPayOutList;
         }
 
         public void calculatePawtnaPayInDates(PawtnaResponsItem pawtnaResponsItem)
@@ -162,7 +204,6 @@ namespace Company.Function
                 pawtnaPayIn.Pawtna = pawtnaResponsItem.Pawtna;
                 pawtnaPayIn.PayInDateList=payInDateList;
                 pawtnaPayInList.Add(pawtnaPayIn);
-
             }
             pawtnaResponsItem.PawtnaPayinList = pawtnaPayInList;
              
@@ -254,7 +295,7 @@ namespace Company.Function
     public class PersonPayOut
     {
         public PawtnaItem Pawtna { get; set; }
-        public List<DateTime> PayOutDateList { get; set; }
+
         public Person Person { get; set; }
     }
 
@@ -269,6 +310,7 @@ namespace Company.Function
     public class PawtnaTrnxResponsItem
     {
         public List<PayInTransaction> payInTransactionList { get; set; }
+        public List<PayOutTransaction> payOutTransactionList { get; set; }
     }
 
     public class Person
@@ -297,7 +339,7 @@ namespace Company.Function
         public class PayOutTransaction 
     {
         public DateTime PayOutDate { get; set; }
-       public PawtnaPayOut PawtnaPayOut { get; set; }
+       public PersonPayOut PersonPayOut { get; set; }
     }
 
     public class PayInTransactionResponse

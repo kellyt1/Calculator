@@ -45,19 +45,21 @@ namespace Company.Function
             for(int i=0; i<2; i++)
             {
                 PayOutTransaction payOutTransaction = new PayOutTransaction();
+                //PawtnaPayIn pawtnaPayIn = new PawtnaPayIn();
+                Wallet wallet = new Wallet(){  Stash=10};
+                
                 PawtnaItem pawtnaItem = new PawtnaItem();
-                PawtnaPayOut pawtnaPayOut = new PawtnaPayOut();
-
-                pawtnaItem.Bank.Value  = 500 ;
-                //pawtnaItem.PersonList = createPeoplebaseonRequestInput(2);
+                pawtnaItem.Bank = new Bank(){BankAcct = "test"+i, Value=500};
                 pawtnaItem.PayOut = 500;
+                pawtnaItem.NumOfPeople = 2;
+                Person person = new Person(){ Name="test"+i, Wallet=wallet};
 
-                pawtnaPayOut.Pawtna = pawtnaItem;
-                pawtnaPayOut.PersonPayOutList = createPeoplebaseonRequestInput(2);
 
-                payOutTransaction.PawtnaPayOut = pawtnaPayOut;
-                payOutTransactionList.Add(payOutTransaction);
+                PersonPayOut personPayOut = new PersonPayOut(){Pawtna = pawtnaItem, Person = person};
+
+                payOutTransaction.PersonPayOut = personPayOut;
                 payOutTransaction.PayOutDate = DateTime.Now;
+                payOutTransactionList.Add(payOutTransaction);
             }
         }
 
@@ -82,10 +84,7 @@ namespace Company.Function
             foreach (PayOutTransaction i in payOutTransactionList) 
             {
                 
-                // foreach (Person p in i.PawtnaPayOut.PersonPayOutList)
-                // {
-                //     payOutTransactionsFunction(i.PayOutDate,p, i.PawtnaPayOut.Pawtna );
-                // }
+                payOutTransactionsFunction(i.PayOutDate,i.PersonPayOut.Person, i.PersonPayOut.Pawtna );
                 
             } 
         }

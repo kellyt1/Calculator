@@ -50,19 +50,24 @@ namespace Company.Function
             for(int i=0; i<2; i++)
             {
                 PayInTransaction payInTransaction = new PayInTransaction();
-                PawtnaPayIn pawtnaPayIn = new PawtnaPayIn();
+                //PawtnaPayIn pawtnaPayIn = new PawtnaPayIn();
+                Wallet wallet = new Wallet(){  Stash=10};
                 
                 PawtnaItem pawtnaItem = new PawtnaItem();
-                pawtnaItem.Bank.Value  = 0 ;
+                pawtnaItem.Bank = new Bank(){BankAcct = "test"+i, Value=0};
                 pawtnaItem.PayIn = 50;
                 pawtnaItem.NumOfPeople = 2;
+                Person person = new Person(){ Name="test"+i, Wallet=wallet};
 
-                pawtnaPayIn.Pawtna = pawtnaItem;
+                //pawtnaPayIn.Pawtna = pawtnaItem;
                 //pawtnaPayIn.PersonPayInList = createPeoplebaseonRequestInput(pawtnaItem.NumOfPeople);
 
-                //payInTransaction.PawtnaPayIn = pawtnaPayIn;
-                payInTransactionList.Add(payInTransaction);
+
+                PersonPayIn personPayIn = new PersonPayIn(){Pawtna = pawtnaItem, Person = person};
+
+                payInTransaction.PersonPayIn = personPayIn;
                 payInTransaction.PayInDate = DateTime.Now;
+                payInTransactionList.Add(payInTransaction);
             }
         }
 
@@ -86,11 +91,8 @@ namespace Company.Function
         {
             foreach (PayInTransaction i in payInTransactionList) 
             {
-                
-                // foreach (Person p in i.PawtnaPayIn.PersonPayInList)
-                // {
-                //     payInTransactionsFunction(i.PayInDate,p, i.PawtnaPayIn.Pawtna );
-                // }
+
+                payInTransactionsFunction(i.PayInDate,i.PersonPayIn.Person, i.PersonPayIn.Pawtna );
                 
             } 
         }
