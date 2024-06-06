@@ -174,7 +174,7 @@ namespace Company.Function
             var pawtnaPayOut = new PawtnaPayOut();
             for(int i = 0; i < pawtnaResponsItem.Pawtna.NumOfPeople; i++)
             {
-                nextDate = nextDate.AddDays(payOutPeriod);
+                nextDate = nextDate.AddDays(payOutPeriod * 7);
                 payOutDateList.Add(nextDate);
             
                 pawtnaPayOut.Pawtna = pawtnaResponsItem.Pawtna;
@@ -186,7 +186,7 @@ namespace Company.Function
 
         public void calculatePawtnaPayInDates(PawtnaResponsItem pawtnaResponsItem)
         {
-            var payInPeriod = pawtnaResponsItem.Pawtna.PayInSchedule * 7;
+            var payInPeriod = pawtnaResponsItem.Pawtna.PayInSchedule;
             var pawtnaPayInList = new List<PawtnaPayIn>();
             var numofPayIns = pawtnaResponsItem.Pawtna.Duration/pawtnaResponsItem.Pawtna.PayInSchedule;
             var startDate = dateConverter(pawtnaResponsItem.Pawtna.StartDate);
@@ -197,7 +197,7 @@ namespace Company.Function
                 var payInDateList = new List<DateTime>();
                 for(int j = 0; j < numofPayIns; j++)
                 {
-                     nextDate = j==0 ? startDate : nextDate.AddDays(payInPeriod);
+                     nextDate = j==0 ? startDate : nextDate.AddDays(payInPeriod * 7);
                     payInDateList.Add(nextDate);
                 }
                 
